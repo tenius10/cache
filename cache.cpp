@@ -122,7 +122,6 @@ std::string Cache::toString(){
         cur=cur->prev;
     }
     result+="\n";
-    
     return result;
 }
 
