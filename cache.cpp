@@ -167,7 +167,9 @@ void Cache::HashTable::removeItem(Cache::Node* node){
     int hashCode=hash(node->entry->key);
     LinkedList& list=hashTable[hashCode];
 
-    list.deleteNode(node);
+    // 매개변수로 받은 node의 key를 entry->key로 하는 해시 테이블 상의 리스트 노드를 넣어줘야 함.
+    Node* oldNode=list.findNode(node->entry->key);
+    list.deleteNode(oldNode);
 }
 
 // 테이블에서 아이템 검색
@@ -238,6 +240,8 @@ void Cache::LinkedList::insertNode(Cache::Node* pre, Cache::Node* node){
 
 // node를 제거
 void Cache::LinkedList::deleteNode(Cache::Node* node){
+    if(node==nullptr) return;
+
     // 연결 끊기
     Cache::Node* pre=node->prev;
     Cache::Node* next=node->next;
@@ -265,6 +269,9 @@ void Cache::LinkedList::deleteNode(Cache::Node* node){
 
 // node의 위치를 pre 노드의 뒤로 이동
 void Cache::LinkedList::moveNode(Cache::Node* pre, Cache::Node* node){
+    // 위치를 변경할 필요가 없는 경우
+    if(pre==node) return;
+
     // node의 연결 끊기
     Cache::Node* prev=node->prev;
     Cache::Node* next=node->next;
