@@ -112,7 +112,7 @@ std::string Cache::toString(){
                 result+=std::to_string(*((int*)cur->entry->value));
                 break;
             case TYPE_DOUBLE:
-                result+=doubleToString(*((double*)cur->entry->value));
+                result+=dblToStr(*((double*)cur->entry->value));
                 break;
             default:
                 break;
@@ -125,7 +125,7 @@ std::string Cache::toString(){
 }
 
 // double 값을 문자열로 변환
-std::string doubleToString(double value) {
+std::string Cache::dblToStr(double value) {
   std::ostringstream ss;
   ss << value;
   return ss.str();
@@ -155,11 +155,11 @@ void Cache::HashTable::addItem(Cache::Node* node){
     entry->value=new (Node*);
     *((Node**)entry->value)=node;
 
-    Cache::Node* node=new Cache::Node;
-    node->entry=entry;
+    Cache::Node* tableNode=new Cache::Node;
+    tableNode->entry=entry;
 
     // tail 뒤에 새로운 노드 삽입
-    list.insertNode(list.tail(), node);
+    list.insertNode(list.tail(), tableNode);
 }
 
 // 테이블에서 아이템 삭제
@@ -208,7 +208,7 @@ Cache::LinkedList::~LinkedList(){
 
 // pre 노드 뒤에 새로운 노드 삽입
 void Cache::LinkedList::insertNode(Cache::Node* pre, Cache::Node* node){  
-    if(size==0){
+    if(_size==0){
         // 빈 리스트이면 head, tail 설정
         node->prev=nullptr;
         node->next=nullptr;
@@ -236,7 +236,14 @@ void Cache::LinkedList::deleteNode(Cache::Node* node){
     _size--;
 
     // 메모리 할당 해제
-    delete node->entry->value;
+    switch(node->entry->type){
+        case TYPE_INT:
+            delete (int*)node->entry->value;
+        case TYPE_DOUBLE:
+            delete (double*)node->entry->value;
+        case TYPE_NODE_POINTER:
+            delete (Cache::Node**)node->entry->value;
+    }
     delete node->entry;
     delete node;
 }
@@ -244,15 +251,15 @@ void Cache::LinkedList::deleteNode(Cache::Node* node){
 // node의 위치를 pre 노드의 뒤로 이동
 void Cache::LinkedList::moveNode(Cache::Node* pre, Cache::Node* node){
     // node의 연결 끊기
-    Cache::Node* pre=node->prev;
+    Cache::Node* prev=node->prev;
     Cache::Node* next=node->next;
-    if(pre!=nullptr) pre->next=node->next;
+    if(prev!=nullptr) prev->next=node->next;
     if(next!=nullptr) next->prev=node->prev;
     
     _size--;
 
-    // node를 tail에 삽입하기
-    insertNode(_tail, node);
+    // node를 pre 뒤에 삽입하기
+    insertNode(pre, node);
 }
 
 // key가 일치하는 node 검색 (실패 시, nullptr 반환)

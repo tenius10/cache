@@ -74,7 +74,7 @@ private:
   HashTable table;
 
   // double 값을 문자열로 변환
-  std::string doubleToString(double value);
+  std::string dblToStr(double value);
 
 public:
   Cache();

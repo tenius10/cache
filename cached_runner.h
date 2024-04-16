@@ -7,6 +7,9 @@
 class CachedRunner {
 private:
   // TODO: private 멤버 변수와 함수 추가 가능
+  Cache& cache;
+  int _hits;
+  int _misses;
 
 public:
   CachedRunner(Cache &cache);
