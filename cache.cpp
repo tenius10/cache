@@ -3,11 +3,11 @@
 // TODO: 필요한 함수 구현
 
 Cache::Cache(){
-   
+   // 특별히 할 일이 없다
 }
 
 Cache::~Cache(){
-    
+    // LinkedList의 동적 할당 해제는 LinkedList의 소멸자에서 수행한다
 }
 
 
