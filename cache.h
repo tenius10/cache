@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-#define CACHE_SIZE 1
+#define CACHE_SIZE 10
 
 // enum 사용 불가 규칙 때문에, 상수 선언
 #define TYPE_INT 0
