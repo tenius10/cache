@@ -12,7 +12,9 @@ CachedRunner::CachedRunner(Cache &cache) : cache(cache){
 double CachedRunner::multiply(std::string filename){
     // 캐시에 task에 대한 결과값이 존재하는지 확인
     double result;
-    if(cache.get(filename, result)){
+
+    std::string key="multiply("+filename+")";
+    if(cache.get(key, result)){
         // 캐시에 값이 있으면
         _hits++;
     }
@@ -24,7 +26,7 @@ double CachedRunner::multiply(std::string filename){
         result=TaskRunner::multiply(filename);
 
         // 캐시에 결과값 저장하기
-        cache.add(filename, result);
+        cache.add(key, result);
     }
     return result;
 }
@@ -33,7 +35,9 @@ double CachedRunner::multiply(std::string filename){
 int CachedRunner::palindrome(std::string filename){
     // 캐시에 task에 대한 결과값이 존재하는지 확인
     int result;
-    if(cache.get(filename, result)){
+
+    std::string key="palindrome("+filename+")";
+    if(cache.get(key, result)){
         // 캐시에 값이 있으면
         _hits++;
     }
@@ -45,7 +49,7 @@ int CachedRunner::palindrome(std::string filename){
         result=TaskRunner::palindrome(filename);
 
         // 캐시에 결과값 저장하기
-        cache.add(filename, result);
+        cache.add(key, result);
     }
     return result;
 }

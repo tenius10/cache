@@ -121,6 +121,8 @@ std::string Cache::toString(){
         if(cur->prev!=nullptr) result+=" -> ";
         cur=cur->prev;
     }
+    result+="\n";
+    
     return result;
 }
 
