@@ -174,11 +174,13 @@ void Cache::HashTable::removeItem(Cache::Node* node){
 Cache::Node* Cache::HashTable::searchItem(std::string key){
     int hashCode=hash(key);
     LinkedList& list=hashTable[hashCode];
-
     Cache::Node* node=list.findNode(key);
+
     // 해시 테이블에 있는 LinkedList는 value가 가리키는 값이 Node* 타입이므로
     // 반환할 때는 node가 아니라 node->entry->value를 반환해야 한다. 
-    return (Node*)node->entry->value;
+    if(node!=nullptr) return *((Node**)node->entry->value);
+    
+    return nullptr;
 }
 
 
@@ -206,7 +208,7 @@ Cache::LinkedList::~LinkedList(){
     _tail=nullptr;
 }
 
-// pre 노드 뒤에 새로운 노드 삽입
+// pre 노드 뒤에 새로운 노드 삽입 (맨 앞에 삽입하고 싶으면 pre를 nullptr로 설정)
 void Cache::LinkedList::insertNode(Cache::Node* pre, Cache::Node* node){  
     if(_size==0){
         // 빈 리스트이면 head, tail 설정
@@ -215,12 +217,21 @@ void Cache::LinkedList::insertNode(Cache::Node* pre, Cache::Node* node){
         _head=_tail=node;
     }
     else{
-        Cache::Node* next=pre->next;
-        node->prev=pre;
-        node->next=next;
-        if(pre==_tail) _tail=node;
-        if(pre!=nullptr) pre->next=node;
-        if(next!=nullptr) next->prev=node;
+        if(pre==nullptr){
+            // 맨 앞에 삽입하려는 경우
+            node->prev=nullptr;
+            node->next=_head;
+            _head->prev=node;
+            _head=node;
+        }
+        else{
+            Cache::Node* next=pre->next;
+            node->prev=pre;
+            node->next=next;
+            if(pre==_tail) _tail=node;
+            if(pre!=nullptr) pre->next=node;
+            if(next!=nullptr) next->prev=node;
+        }
     }
     _size++;
 }
@@ -230,8 +241,12 @@ void Cache::LinkedList::deleteNode(Cache::Node* node){
     // 연결 끊기
     Cache::Node* pre=node->prev;
     Cache::Node* next=node->next;
+    
     if(pre!=nullptr) pre->next=node->next;
     if(next!=nullptr) next->prev=node->prev;
+
+    if(node==_head) _head=next;
+    if(node==_tail) _tail=pre;
     
     _size--;
 
@@ -253,9 +268,13 @@ void Cache::LinkedList::moveNode(Cache::Node* pre, Cache::Node* node){
     // node의 연결 끊기
     Cache::Node* prev=node->prev;
     Cache::Node* next=node->next;
+
     if(prev!=nullptr) prev->next=node->next;
     if(next!=nullptr) next->prev=node->prev;
-    
+
+    if(node==_head) _head=next;
+    if(node==_tail) _tail=prev;
+
     _size--;
 
     // node를 pre 뒤에 삽입하기

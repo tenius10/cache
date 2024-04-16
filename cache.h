@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-#define CACHE_SIZE 10
+#define CACHE_SIZE 1
 
 // enum 사용 불가 규칙 때문에, 상수 선언
 #define TYPE_INT 0
@@ -40,7 +40,7 @@ private:
     int size(){ return _size; }
     Node* head(){ return _head; }
     Node* tail(){ return _tail; }
-    // pre 노드 뒤에 새로운 노드 삽입
+    // pre 노드 뒤에 새로운 노드 삽입 (맨 앞에 삽입하고 싶으면 pre를 nullptr로 설정)
     void insertNode(Node* pre, Node* node);
     // node를 제거
     void deleteNode(Node* node);
