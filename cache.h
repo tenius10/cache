@@ -5,6 +5,7 @@
 #include <sstream>
 
 #define CACHE_SIZE 10
+#define TABLE_SIZE 20
 
 // enum 사용 불가 규칙 때문에, 상수 선언
 #define TYPE_INT 0
@@ -53,12 +54,11 @@ private:
 
   class HashTable{
   private:
-    // index : 'A' ~ 'Z'
-    LinkedList hashTable[26];
+    LinkedList hashTable[TABLE_SIZE];
 
     // key의 hashcode 반환
     int hash(std::string key);
-
+    
   public:
     // 테이블에 아이템 삽입
     void addItem(Node* node);

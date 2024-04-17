@@ -138,10 +138,10 @@ std::string Cache::dblToStr(double value) {
 // HashTable.cpp를 따로 작성하지 않고 아래에 작성합니다.
 
 // key의 hashcode 반환
-int Cache::HashTable::hash(std::string key){
-    // key의 첫 글자 아스키 코드를 기반으로 인덱스 생성
-    if(key.length()==0) return 0;
-    else return std::toupper(key[0])-'A';
+int Cache::HashTable::hash(std::string key) {
+    std::hash<std::string> hash_fn;
+    size_t hash = hash_fn(key);
+    return hash % TABLE_SIZE;  // 0 ~ (TABLE_SIZE-1)
 }
 
 // 테이블에 아이템 삽입
@@ -259,10 +259,13 @@ void Cache::LinkedList::deleteNode(Cache::Node* node){
     switch(node->entry->type){
         case TYPE_INT:
             delete (int*)node->entry->value;
+            break;
         case TYPE_DOUBLE:
             delete (double*)node->entry->value;
+            break;
         case TYPE_NODE_POINTER:
             delete (Cache::Node**)node->entry->value;
+            break;
     }
     delete node->entry;
     delete node;
