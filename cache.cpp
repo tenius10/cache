@@ -139,9 +139,11 @@ std::string Cache::dblToStr(double value) {
 
 // key의 hashcode 반환
 int Cache::HashTable::hash(std::string key) {
-    std::hash<std::string> hash_fn;
-    size_t hash = hash_fn(key);
-    return hash % TABLE_SIZE;  // 0 ~ (TABLE_SIZE-1)
+    int sum=0;
+    for(int i=0;i<key.length();i++){
+        sum+=key[i];
+    }
+    return sum % TABLE_SIZE;  // 0 ~ (TABLE_SIZE-1)
 }
 
 // 테이블에 아이템 삽입
